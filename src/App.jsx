@@ -18,9 +18,9 @@ function applySessionBackground(type) {
 }
 
 export default function App() {
-  const workDuration = 0.1 * 60;
-  const shortBreak = 0.1 * 60;
-  const longBreak = 0.1 * 60;
+  const workDuration = 25 * 60;
+  const shortBreak = 5 * 60;
+  const longBreak = 15 * 60;
 
   const [timeLeft, setTimeLeft] = useState(workDuration);
   const [isRunning, setIsRunning] = useState(false);

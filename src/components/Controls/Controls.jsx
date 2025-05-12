@@ -1,13 +1,12 @@
+import "./Controls.css"
+
 export default function Controls({isRunning,onStart,onPause,onReset}){
     return (
-        <div style={{
-            marginTop: "10px"
-        }}>
+        <div className="controls-container">
             {
-                isRunning?(
+                isRunning ? (
                     <button onClick={onPause}>Pause</button>
-                ):
-                (
+                ) : (
                     <button onClick={onStart}>Start</button>
                 )
             }

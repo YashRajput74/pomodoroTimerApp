@@ -1,6 +1,7 @@
-import TimerDisplay from "./TimerDisplay"
-import Controls from "./Controls"
+import TimerDisplay from "./components/TimerDisplay/TimerDisplay"
+import Controls from "./components/Controls/Controls"
 import { useState } from "react"
+import "./App.css"
 
 let timerId=null;
 
@@ -47,14 +48,13 @@ export default function App(){
 
     const triggerBeep=()=>{
         const alarm=document.getElementById("alarm");
+        alarm.pause();
+        alarm.currentTime=0;
         setIsBeeping(true);
 
-        alarm.currentTime=0;
-        alarm.play();
-
-        setTimeout(()=>{
-            if(isBeeping) continueToNextSession();
-        },30000);
+        alarm.play().catch((err)=>{
+            console.log("Audio play error: ",err)
+        })
     };
 
     const stopBeep=()=>{
@@ -89,33 +89,34 @@ export default function App(){
     const seconds=timeLeft%60;
 
     return (
-        <div style={{
-            textAlign: 'center',marginTop:'20px'
-        }}>
+         <div className="app-container">
+            <h2 className="session-heading">
+                Session: {sessionType === 'work' ? 'Work' : sessionType === 'shortBreak' ? 'Short Break' : 'Long Break'}
+            </h2>
 
-            <h2>Session: {sessionType=='work'?'Work':sessionType=='shortBreak'?'Short Break':'Long Break'}</h2>
             <TimerDisplay minutes={minutes} seconds={seconds} />
-              {!isBeeping && (
+
+            {!isBeeping && (
                 <Controls
-                isRunning={isRunning}
-                onStart={startTimer}
-                onPause={pauseTimer}
-                onReset={resetTimer}
+                    isRunning={isRunning}
+                    onStart={startTimer}
+                    onPause={pauseTimer}
+                    onReset={resetTimer}
                 />
             )}
 
             {isBeeping && (
-                <div>
-                <p style={{ color: 'red', fontWeight: 'bold' }}>
-                    Alarm! Click to continue to the next session.
-                </p>
-                <button onClick={continueToNextSession} aria-label="Continue to next session">Stop Alarm and Continue</button>
+                <div className="beep-container">
+                    <p className="alarm-text">
+                        Alarm! Click to continue to the next session.
+                    </p>
+                    <button onClick={continueToNextSession} label="Continue to next session">Stop Alarm and Continue</button>
                 </div>
             )}
 
-            <p>Completed Sessions: {sessionCount}</p>
+            <p className="session-count">Completed Sessions: {sessionCount}</p>
 
             <audio id="alarm" src="/alarm.mp3" preload="auto"></audio>
-            </div>
+        </div>
     )
 }
